@@ -12,8 +12,8 @@ issue.
 
 For Apache, with Drupal running on the same box as Apache, a couple lines like:
 
-ProxyPass /adore-djatoka/ http://localhost:8080/adore-djatoka/
-ProxyPassReverse /adore-djatoka/ http://localhost:8080/adore-djatoka/
+ProxyPass /adore-djatoka http://localhost:8080/adore-djatoka
+ProxyPassReverse /adore-djatoka http://localhost:8080/adore-djatoka
 
 in the Apache config somewhere (either the main apache.conf, httpd.conf, or in
 and arbitrarily named *.conf in your Apache's conf.d directory should suffice 

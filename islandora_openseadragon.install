@@ -37,3 +37,10 @@ function islandora_openseadragon_uninstall() {
   );
   array_walk($variables, 'variable_del');
 }
+
+function islandora_openseadragon_enable() {
+  if(!user_access(FEDORA_VIEW_OBJECTS, user_load(0))) {
+    drupal_set_message(t('Open Seadragon viewer requires that the annoymous user has this permission
+      "View repository objects and datastreams" enabled. ' . l('Permissions', 'admin/people/permissions')), 'warning');
+  }
+}
