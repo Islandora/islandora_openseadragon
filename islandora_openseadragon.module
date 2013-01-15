@@ -69,6 +69,11 @@ function islandora_openseadragon_callback($uri = NULL) {
  * Implements hook_preprocess().
  */
 function islandora_openseadragon_preprocess_islandora_openseadragon_viewer(&$variables) {
+  if (!user_access(FEDORA_VIEW_OBJECTS, user_load(0))) {
+    drupal_set_message(t('Open Seadragon viewer requires that the annoymous user has this permission
+      "View repository objects and datastreams" enabled.') . ' ' . l(t('Permissions'), 'admin/people/permissions'), 'warning');
+  }
+
   $library_path = libraries_get_path('openseadragon');
   $module_path = drupal_get_path('module', 'islandora_openseadragon');
   $variables['viewer_id'] = 'islandora-openseadragon';
