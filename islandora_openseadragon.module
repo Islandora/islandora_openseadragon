@@ -93,9 +93,9 @@ function islandora_openseadragon_preprocess_islandora_openseadragon_viewer(&$var
         'settings' => $settings,
       ),
     ), 'setting');
+  drupal_add_js("$module_path/js/islandora_openseadragon.js");
   drupal_add_js("$library_path/openseadragon.js");
   drupal_add_js("$module_path/js/djtilesource.js");
-  drupal_add_js("$module_path/js/islandora_openseadragon.js");
   drupal_add_css("$module_path/css/islandora_openseadragon.theme.css");
 }
 
