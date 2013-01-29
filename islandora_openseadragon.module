@@ -17,7 +17,7 @@ function islandora_openseadragon_menu() {
       'page callback' => 'drupal_get_form',
       'access arguments' => array('administer site configuration'),
       'page arguments' => array('islandora_openseadragon_admin'),
-      'file' => 'admin/islandora_openseadragon.admin.inc',
+      'file' => 'includes/admin.form.inc',
       'type' => MENU_NORMAL_ITEM,
     )
   );
