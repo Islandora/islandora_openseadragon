@@ -10,3 +10,9 @@
 {
   background-color: #000 !important; /* should be replaced with OpenSeadragon setting */
 }
+
+.islandora-openseadragon-highlight
+{
+  background-color: #F00;
+  opacity: 0.5;
+}
