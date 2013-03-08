@@ -2,7 +2,6 @@
 
 /**
  * @file
- *
  * Hooks and callbacks for this module.
  */
 
@@ -57,7 +56,7 @@ function islandora_openseadragon_islandora_viewer_info() {
 /**
  * Callback function for the viewer.
  *
- * @param array
+ * @param array $params
  *   Params required by the theme
  *   Image url be passed to the viewer.
  * @param IslandoraFedoraObject $fedora_object
@@ -75,7 +74,7 @@ function islandora_openseadragon_callback($params = NULL, $fedora_object = NULL)
  * Implements hook_preprocess().
  */
 function islandora_openseadragon_preprocess_islandora_openseadragon_viewer(&$variables) {
-  //fedora_object included in results, but not used
+  // Variable fedora_object included in results, but not used.
   $library_path = libraries_get_path('openseadragon');
   $module_path = drupal_get_path('module', 'islandora_openseadragon');
   $variables['viewer_id'] = 'islandora-openseadragon';
@@ -97,7 +96,7 @@ function islandora_openseadragon_preprocess_islandora_openseadragon_viewer(&$var
   if (isset($_GET['terms']) && isset($variables['fedora_object'])) {
     $highlighting_info = islandora_paged_content_get_highlighting_info($variables['fedora_object'], urldecode($_GET['terms']));
     $highlights = $highlighting_info['bounding_boxes'];
-  
+
     foreach ($highlights as $key => $highlight) {
       // The size on the x axis is used to calculate the proportional values
       // under the openseadragon coordinate system.
@@ -115,6 +114,7 @@ function islandora_openseadragon_preprocess_islandora_openseadragon_viewer(&$var
   }
   drupal_add_js(array(
       'islandoraOpenSeadragon' => array(
+        'pid' => $variables['fedora_object']->id,
         'resourceUri' => $variables['uri'],
         'tileSize' => (int) variable_get('islandora_openseadragon_tile_size', '256'),
         'tileOverlap' => (int) variable_get('islandora_openseadragon_tile_overlap', '0'),
@@ -158,4 +158,29 @@ function islandora_openseadragon_get_settings() {
       'zoomPerSecond' => '2.0',
     )
   );
+}
+
+/**
+ * Implements hook_process_theme().
+ */
+function islandora_openseadragon_preprocess_islandora_object_print(array &$variables) {
+  $object = $variables['object'];
+  if (isset($_GET['clip'])) {
+    $dimensions = array();
+    if (isset($_GET['dimensions'])) {
+      $dimensions = explode(',', $_GET['dimensions']);
+      $dimensions = array(
+        'width' => $dimensions[0],
+        'height' => $dimensions[1],
+      );
+    }
+    $variables['clip'] = $clip = $_GET['clip'];
+    $variables['content']['clip'] = array(
+      '#weight' => 0,
+      '#prefix' => "<div id='clip'>",
+      '#markup' => theme_image(array(
+                   'path' => $_GET['clip'], 'attributes' => $dimensions)),
+      '#suffix' => '</div>',
+    );
+  }
 }
