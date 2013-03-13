@@ -93,28 +93,36 @@ function islandora_openseadragon_preprocess_islandora_openseadragon_viewer(&$var
   }
 
   // This is where we jam in some HOCR coordinates.
-  if (isset($_GET['terms']) && isset($variables['fedora_object'])) {
-    $highlighting_info = islandora_paged_content_get_highlighting_info($variables['fedora_object'], urldecode($_GET['terms']));
-    $highlights = $highlighting_info['bounding_boxes'];
+  if (isset($variables['fedora_object']) && isset($_GET['solr'])) {
+    $params = $_GET['solr']['params'];
+    $params['fq'][] = format_string('PID:"!pid"', array(
+      '!pid' => $variables['fedora_object']->id,
+    ));
+    module_load_include('inc', 'islandora_paged_content', 'includes/highlighting');
+    $highlighting_info = islandora_paged_content_perform_solr_highlighting_query($_GET['solr']['query'], $params);
+    $highlights = array();
 
-    foreach ($highlights as $key => $highlight) {
-      // The size on the x axis is used to calculate the proportional values
-      // under the openseadragon coordinate system.
-      $highlights[$key]['x'] = $highlights[$key]['left'] / $highlighting_info['width'];
-      $highlights[$key]['y'] = $highlights[$key]['top'] / $highlighting_info['width'];
-      $highlights[$key]['width'] = ($highlights[$key]['right'] - $highlights[$key]['left']) / $highlighting_info['width'];
-      $highlights[$key]['height'] = ($highlights[$key]['bottom'] - $highlights[$key]['top']) / $highlighting_info['width'];
-      unset($highlights[$key]['left']);
-      unset($highlights[$key]['top']);
-      unset($highlights[$key]['right']);
-      unset($highlights[$key]['bottom']);
-      $highlights[$key]['className'] = "islandora-openseadragon-highlight";
+    foreach ($highlighting_info as $pid => $info) {
+      foreach ($info['snippets'] as $snippet => $bounding_boxes) {
+        foreach ($bounding_boxes as $bounding_box) {
+          // The size on the x axis is used to calculate the proportional values
+          // under the openseadragon coordinate system.
+          $highlights[] = array(
+            'x' => $bounding_box['left'] / $info['page']['width'],
+            'y' => $bounding_box['top'] / $info['page']['width'],
+            'width' => ($bounding_box['right'] - $bounding_box['left']) / $info['page']['width'],
+            'height' => ($bounding_box['bottom'] - $bounding_box['top']) / $info['page']['width'],
+            'className' => "islandora-openseadragon-highlight",
+          );
+        }
+      }
     }
     $settings['overlays'] = $highlights;
   }
+
   drupal_add_js(array(
       'islandoraOpenSeadragon' => array(
-        'pid' => $variables['fedora_object']->id,
+        'pid' => isset($variables['fedora_object'])? $variables['fedora_object']->id: NULL,
         'resourceUri' => $variables['uri'],
         'tileSize' => (int) variable_get('islandora_openseadragon_tile_size', '256'),
         'tileOverlap' => (int) variable_get('islandora_openseadragon_tile_overlap', '0'),
@@ -184,3 +192,4 @@ function islandora_openseadragon_preprocess_islandora_object_print(array &$varia
     );
   }
 }
+
