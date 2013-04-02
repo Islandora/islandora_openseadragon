@@ -16,10 +16,10 @@ function islandora_openseadragon_requirements() {
     module_enable(array('libraries'));
   }
   if (!in_array('openseadragon', array_keys(libraries_get_libraries()))) {
-    $readme_link = l('README.txt', drupal_get_path('module', 'islandora_openseadragon') . '/README.txt') ;
+    $readme_link = l('README', drupal_get_path('module', 'islandora_openseadragon') . '/README.txt') ;
     $requirements['openseadragon'] = array(
       'title' => $t('OpenSeadragon library'),
-      'description' => $t('OpenSeadragon library missing, please view the !readme for installation instructions.', array('!readme' => $readme_link)),
+      'description' => $t('OpenSeadragon library missing; please consult the !readme for installation instructions.', array('!readme' => $readme_link)),
       'severity' => REQUIREMENT_ERROR,
     );
   }

@@ -25,7 +25,7 @@ function islandora_openseadragon_admin($form, &$form_state) {
     '#type' => 'checkbox',
     '#title' => t('Debug mode'),
     '#default_value' => $settings['debugMode'],
-    '#description' => t('Whether messages should be logged and fail-fast behavior should be provided.'),
+    '#description' => t('Toggles whether messages should be logged and fail-fast behavior should be provided.'),
   );
   // animation time
   $form['islandora_openseadragon_settings']['animationTime'] = array(
@@ -50,21 +50,21 @@ function islandora_openseadragon_admin($form, &$form_state) {
     '#type' => 'checkbox',
     '#title' => t('Always blend'),
     '#default_value' => $settings['alwaysBlend'],
-    '#description' => t('Whether tiles should always blend in and out, not just when they\'re first loaded.'),
+    '#description' => t('Toggles whether tiles should always blend in and out, and not just when they\'re first loaded.'),
   );
   // auto hide controls
   $form['islandora_openseadragon_settings']['autoHideControls'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Auto hide controls'),
+    '#title' => t('Auto-hide controls'),
     '#default_value' => $settings['autoHideControls'],
-    '#description' => t('Whether controls should get automatically hidden when the user\'s mouse is off the viewer and the image has stopped animating.'),
+    '#description' => t('Toggles whether controls should get automatically hidden when the user\'s mouse is off the viewer and the image has stopped animating.'),
   );
   // immediate render
   $form['islandora_openseadragon_settings']['immediateRender'] = array(
     '#type' => 'checkbox',
     '#title' => t('Immediate render'),
     '#default_value' => $settings['immediateRender'],
-    '#description' => t('Whether the most appropriate tiles should always be rendered first, before any lower-res tiles are rendered. This loses the "sharpening" effect and instead creates a very visible "tiling" effect.'),
+    '#description' => t('Toggles whether the most appropriate tiles should always be rendered first, before any lower-resolution tiles are rendered. This loses the "sharpening" effect and instead creates a very visible "tiling" effect.'),
   );
   // wrap horizontal
   $form['islandora_openseadragon_settings']['wrapHorizontal'] = array(
@@ -72,16 +72,16 @@ function islandora_openseadragon_admin($form, &$form_state) {
     '#title' => t('Wrap horizontal'),
     '#default_value' => $settings['wrapHorizontal'],
     '#description' =>
-    t('Whether tiles should be "wrapped" horizontally, so that there are no left or right edges.') . '<br />' .
+    t('Toggles whether tiles should be "wrapped" horizontally, so that there are no left or right edges.') . '<br />' .
     '<strong>' . t('NOTE: this is an experimental API and is not guaranteed to work. The API is also very likely to change in the future. Use at your own risk!') . '</strong>',
   );
   // wrap vertical
   $form['islandora_openseadragon_settings']['wrapVertical'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Wrap horizontal'),
+    '#title' => t('Wrap vertical'),
     '#default_value' => $settings['wrapVertical'],
     '#description' =>
-    t('Whether tiles should be "wrapped" vertically, so that there are no top or bottom edges.') . '<br />' .
+    t('Toggles whether tiles should be "wrapped" vertically, so that there are no top or bottom edges.') . '<br />' .
     '<strong>' . t('NOTE: this is an experimental API and is not guaranteed to work. The API is also very likely to change in the future. Use at your own risk!') . '</strong>',
   );
   // wrap overlays
@@ -90,7 +90,7 @@ function islandora_openseadragon_admin($form, &$form_state) {
     '#title' => t('Wrap overlays'),
     '#default_value' => $settings['wrapOverlays'],
     '#description' =>
-    t('Whether overlays should be continually re-positioned to match any horizontal or vertical wrapping. This has no effect if neither wrapHorizontal nor wrapVertical are set.') . '<br />' .
+    t('Toggles whether overlays should be continually repositioned to match any horizontal or vertical wrapping. This has no effect if neither Wrap Horizontal nor Wrap Vertical are set.') . '<br />' .
     '<strong>' . t('NOTE: this is an experimental API and is not guaranteed to work. The API is also very likely to change in the future. Use at your own risk!') . '</strong>',
   );
   // pan horizontal
@@ -98,14 +98,14 @@ function islandora_openseadragon_admin($form, &$form_state) {
     '#type' => 'checkbox',
     '#title' => t('Pan horizontal'),
     '#default_value' => $settings['panHorizontal'],
-    '#description' => t('Whether the image should be able to panned horizontally.'), // @TODO: better description
+    '#description' => t('Toggles whether images can be moved along the horizontal axis of the viewer.'),
   );
   // pan vertical
   $form['islandora_openseadragon_settings']['panVertical'] = array(
     '#type' => 'checkbox',
     '#title' => t('Pan vertical'),
     '#default_value' => $settings['panVertical'],
-    '#description' => t('Whether the image should be able to panned vertically.'), // @TODO: better description
+    '#description' => t('Toggles whether images can be moved along the vertical axis of the viewer.'),
   );
   // minimum zoom image ratio
   $form['islandora_openseadragon_settings']['minZoomImageRatio'] = array(
@@ -123,7 +123,7 @@ function islandora_openseadragon_admin($form, &$form_state) {
     '#size' => 10,
     '#element_validate' => array('element_validate_number'),
     '#default_value' => $settings['maxZoomPixelRatio'],
-    '#description' => t('The maximum pixel ratio (screen pixel to content pixel) that can result from zooming in.'),
+    '#description' => t('The maximum pixel ratio (screen pixels to image file pixels) that can result from zooming in.'),
   );
   // visibility ratio
   $form['islandora_openseadragon_settings']['visibilityRatio'] = array(
@@ -134,7 +134,7 @@ function islandora_openseadragon_admin($form, &$form_state) {
     '#default_value' => $settings['visibilityRatio'],
     '#description' => t('The minimum portion of the viewport that must show visible content in both dimensions.'),
   );
-  // sprint stiffness
+  // spring stiffness
   $form['islandora_openseadragon_settings']['springStiffness'] = array(
     '#type' => 'textfield',
     '#title' => t('Spring stiffness'),
@@ -195,7 +195,7 @@ function islandora_openseadragon_admin($form, &$form_state) {
     '#size' => 10,
     '#element_validate' => array('element_validate_number'),
     '#default_value' => $settings['zoomPerSecond'],
-    '#description' => t('The factor by which images should zoom over each second when the zoom buttons are held down.'),
+    '#description' => t('The factor by which images should zoom every second when the zoom buttons are held down.'),
   );
 
   // tile size
@@ -205,7 +205,7 @@ function islandora_openseadragon_admin($form, &$form_state) {
     '#size' => 10,
     '#element_validate' => array('element_validate_integer'),
     '#default_value' => variable_get('islandora_openseadragon_tile_size', '256'),
-    '#description' => t('tile size setting.'),
+    '#description' => t('The size of image tiles used to compose the image as a whole, in pixels.'),
   );
   // tile overlap
   $form['islandora_openseadragon_tile_overlap'] = array(
@@ -214,7 +214,7 @@ function islandora_openseadragon_admin($form, &$form_state) {
     '#size' => 10,
     '#element_validate' => array('element_validate_integer'),
     '#default_value' => variable_get('islandora_openseadragon_tile_overlap', '0'),
-    '#description' => t('tile overlap setting.'),
+    '#description' => t('The number of pixels by which each tile will overlap adjacent ones.'),
   );
 
   // actions
