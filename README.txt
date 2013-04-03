@@ -40,7 +40,7 @@ DEPENDENCIES
 We assume the core OpenSeadragon Javascript is put into sites/all/libraries/openseadragon. 
 The most current version breaks the Islandora integration, which will be addressed in the 
 future. The correct version for Islandora can be obtained from here:
-https://github.com/thatcher/openseadragon/tarball/1c7f5839f90c28e97c96c169fdf23da24826605f
+http://openseadragon.github.com/openseadragon.zip
 * There is a conditional dependency on the islandora_paged_content module, but should not require
 any additional actions from the user as the solution packs that use the feature requiring the 
 islandora_paged_content module include it in their depency lists.

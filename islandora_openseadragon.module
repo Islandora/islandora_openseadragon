@@ -80,8 +80,33 @@ function islandora_openseadragon_preprocess_islandora_openseadragon_viewer(&$var
   $variables['viewer_id'] = 'islandora-openseadragon';
   $settings = array(
     'id' => $variables['viewer_id'],
-    'prefixUrl' => url($library_path),
+    'prefixUrl' => file_create_url("$library_path/images/"),
   );
+
+  module_load_include('inc', 'islandora_openseadragon', 'includes/utilities');
+  $installed_version = islandora_openseadragon_get_installed_version();
+
+  if ($installed_version <= islandora_openseadragon_version_string_to_int('0.9.82')) {
+    // XXX: Version numbers don't quite line-up for the change in the nav image
+    // prefix URL, so now, let the hacking begin!... Just for compatibility
+    // with older versions.
+    $types = array('zoomIn', 'zoomOut', 'home', 'fullpage', 'previous', 'next');
+    $actions = array(
+      'REST' => 'rest',
+      'GROUP' => 'grouphover',
+      'HOVER' => 'hover',
+      'DOWN' => 'pressed'
+    );
+    foreach ($types as $type) {
+      foreach ($actions as $action => $namepart) {
+        $settings['navImages'][$type][$action] = format_string('!type_!action.png', array(
+          '!type' => strtolower($type),
+          '!action' => $namepart,
+        ));
+      }
+    }
+  }
+
   $settings = array_merge($settings, islandora_openseadragon_get_settings());
   foreach ($settings as $key => $val) {
     if (filter_var($val, FILTER_VALIDATE_FLOAT)) {
