@@ -86,7 +86,7 @@ function islandora_openseadragon_preprocess_islandora_openseadragon_viewer(&$var
   module_load_include('inc', 'islandora_openseadragon', 'includes/utilities');
   $installed_version = islandora_openseadragon_get_installed_version();
 
-  if ($installed_version <= islandora_openseadragon_version_string_to_int('0.9.82')) {
+  if (version_compare($installed_version, '0.9.82') <= 0) {
     // XXX: Version numbers don't quite line-up for the change in the nav image
     // prefix URL, so now, let the hacking begin!... Just for compatibility
     // with older versions.
