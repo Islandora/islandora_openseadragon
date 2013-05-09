@@ -2,7 +2,6 @@
 
 /**
  * @file
- *
  * Install hooks for this module.
  */
 
@@ -11,12 +10,13 @@
  */
 function islandora_openseadragon_requirements() {
   $requirements = array();
-  $t = get_t(); // Ensure translations don't break at install time
+  // Ensure translations don't break at install time.
+  $t = get_t();
   if (!function_exists('libraries_get_libraries')) {
     module_enable(array('libraries'));
   }
   if (!in_array('openseadragon', array_keys(libraries_get_libraries()))) {
-    $readme_link = l('README', drupal_get_path('module', 'islandora_openseadragon') . '/README.txt') ;
+    $readme_link = l($t('README'), drupal_get_path('module', 'islandora_openseadragon') . '/README.txt');
     $requirements['openseadragon'] = array(
       'title' => $t('OpenSeadragon library'),
       'description' => $t('OpenSeadragon library missing; please consult the !readme for installation instructions.', array('!readme' => $readme_link)),
