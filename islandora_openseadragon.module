@@ -95,7 +95,7 @@ function islandora_openseadragon_preprocess_islandora_openseadragon_viewer(&$var
       'REST' => 'rest',
       'GROUP' => 'grouphover',
       'HOVER' => 'hover',
-      'DOWN' => 'pressed'
+      'DOWN' => 'pressed',
     );
     foreach ($types as $type) {
       foreach ($actions as $action => $namepart) {
@@ -147,7 +147,7 @@ function islandora_openseadragon_preprocess_islandora_openseadragon_viewer(&$var
 
   drupal_add_js(array(
       'islandoraOpenSeadragon' => array(
-        'pid' => isset($variables['fedora_object'])? $variables['fedora_object']->id: NULL,
+        'pid' => isset($variables['fedora_object'])? $variables['fedora_object']->id : NULL,
         'resourceUri' => $variables['uri'],
         'tileSize' => (int) variable_get('islandora_openseadragon_tile_size', '256'),
         'tileOverlap' => (int) variable_get('islandora_openseadragon_tile_overlap', '0'),
@@ -217,4 +217,3 @@ function islandora_openseadragon_preprocess_islandora_object_print(array &$varia
     );
   }
 }
-
