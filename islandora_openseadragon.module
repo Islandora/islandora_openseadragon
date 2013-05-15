@@ -59,7 +59,7 @@ function islandora_openseadragon_islandora_viewer_info() {
  * @param array $params
  *   Params required by the theme
  *   Image url be passed to the viewer.
- * @param IslandoraFedoraObject $fedora_object
+ * @param IslandoraAbstractObject $fedora_object
  *   The object that we are viewing.
  *
  * @return string
