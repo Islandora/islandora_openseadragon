@@ -57,8 +57,8 @@ function islandora_openseadragon_islandora_viewer_info() {
  * Callback function for the viewer.
  *
  * @param array $params
- *   Params required by the theme
- *   Image url be passed to the viewer.
+ *   Params required by the theme. We require the keys:
+ *   - jp2_url: The URL to the JP2 image.
  * @param IslandoraAbstractObject $fedora_object
  *   The object that we are viewing.
  *
@@ -66,8 +66,10 @@ function islandora_openseadragon_islandora_viewer_info() {
  *   HTML repersentation of the OpenSeadragon viewer
  */
 function islandora_openseadragon_callback($params = NULL, $fedora_object = NULL) {
-  $uri = $params['jp2_url'];
-  return theme('islandora_openseadragon_viewer', array('uri' => $uri, 'fedora_object' => $fedora_object));
+  if (isset($params['jp2_url'])) {
+    $uri = $params['jp2_url'];
+    return theme('islandora_openseadragon_viewer', array('uri' => $uri, 'fedora_object' => $fedora_object));
+  }
 }
 
 /**
