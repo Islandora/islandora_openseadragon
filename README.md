@@ -1,3 +1,14 @@
+BUILD STATUS
+------------
+Current build status:
+[![Build Status](https://travis-ci.org/Islandora/islandora_openseadragon.png?branch=7.x)](https://travis-ci.org/Islandora/islandora_openseadragon)
+
+CI Server:
+http://jenkins.discoverygarden.ca
+
+ISLANDORA OPENSEADRAGON
+==================
+
 CONTENTS OF THIS FILE
 ---------------------
 
