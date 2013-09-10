@@ -106,6 +106,13 @@ function islandora_openseadragon_admin($form, &$form_state) {
     '#default_value' => $settings['panVertical'],
     '#description' => t('Toggles whether images can be moved along the vertical axis of the viewer.'),
   );
+  // Show Navigator.
+  $form['islandora_openseadragon_settings']['showNavigator'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show Navigator'),
+    '#default_value' => $settings['showNavigator'],
+    '#description' => t('Toggles whether image navigator is displayed.'),
+  );
   // Minimum zoom image ratio.
   $form['islandora_openseadragon_settings']['minZoomImageRatio'] = array(
     '#type' => 'textfield',
@@ -196,7 +203,6 @@ function islandora_openseadragon_admin($form, &$form_state) {
     '#default_value' => $settings['zoomPerSecond'],
     '#description' => t('The factor by which images should zoom every second when the zoom buttons are held down.'),
   );
-
   // Tile size.
   $form['islandora_openseadragon_tile_size'] = array(
     '#type' => 'textfield',

@@ -37,22 +37,23 @@ ProxyPass /adore-djatoka http://localhost:8080/adore-djatoka
 ProxyPassReverse /adore-djatoka http://localhost:8080/adore-djatoka
 
 in the Apache config somewhere (either the main apache.conf, httpd.conf, or in
-and arbitrarily named *.conf in your Apache's conf.d directory should suffice 
+and arbitrarily named *.conf in your Apache's conf.d directory should suffice
 to establish the reverse proxy.
+
 In Debian derived systems one will need to create location entries for each
 proxy or remove the Deny from All in mod_proxy's conf file.
 
-Note: the image passed to Djatoka needs anonymous user access permissions.
 
 DEPENDENCIES
 ------------
 
 * OpenSeadragon
-We assume the core OpenSeadragon Javascript is put into sites/all/libraries/openseadragon. 
+We assume the core OpenSeadragon Javascript is put into sites/all/libraries/openseadragon.
 Link to Openseadragon download: http://openseadragon.github.io/releases/openseadragon-bin-0.9.124.zip
 * There is a conditional dependency on the islandora_paged_content module, but should not require
-any additional actions from the user as the solution packs that use the feature requiring the 
+any additional actions from the user as the solution packs that use the feature requiring the
 islandora_paged_content module include it in their depency lists.
+
 
 TODO
 ----

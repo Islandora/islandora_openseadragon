@@ -191,6 +191,7 @@ function islandora_openseadragon_get_settings() {
       'zoomPerClick' => '2.0',
       'zoomPerScroll' => '1.2',
       'zoomPerSecond' => '2.0',
+      'showNavigator' => TRUE,
     )
   );
 }
