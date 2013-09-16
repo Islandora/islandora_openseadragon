@@ -203,6 +203,7 @@ function islandora_openseadragon_admin($form, &$form_state) {
     '#default_value' => $settings['zoomPerSecond'],
     '#description' => t('The factor by which images should zoom every second when the zoom buttons are held down.'),
   );
+
   // Tile size.
   $form['islandora_openseadragon_tile_size'] = array(
     '#type' => 'textfield',

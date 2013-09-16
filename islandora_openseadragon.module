@@ -169,30 +169,29 @@ function islandora_openseadragon_preprocess_islandora_openseadragon_viewer(&$var
  *   Configuration options for OpenSeadragon.
  */
 function islandora_openseadragon_get_settings() {
-  return variable_get('islandora_openseadragon_settings', array(
-      'debugMode' => FALSE,
-      'animationTime' => '1.5',
-      'blendTime' => '0.1',
-      'alwaysBlend' => FALSE,
-      'autoHideControls' => TRUE,
-      'immediateRender' => FALSE,
-      'wrapHorizontal' => FALSE,
-      'wrapVertical' => FALSE,
-      'wrapOverlays' => FALSE,
-      'panHorizontal' => TRUE,
-      'panVertical' => TRUE,
-      'minZoomImageRatio' => '0.8',
-      'maxZoomPixelRatio' => '2',
-      'visibilityRatio' => '0.5',
-      'springStiffness' => '5.0',
-      'imageLoaderLimit' => '5',
-      'clickTimeThreshold' => '300',
-      'clickDistThreshold' => '5',
-      'zoomPerClick' => '2.0',
-      'zoomPerScroll' => '1.2',
-      'zoomPerSecond' => '2.0',
-      'showNavigator' => TRUE,
-    )
+  return variable_get('islandora_openseadragon_settings', array()) + array(
+    'debugMode' => FALSE,
+    'animationTime' => '1.5',
+    'blendTime' => '0.1',
+    'alwaysBlend' => FALSE,
+    'autoHideControls' => TRUE,
+    'immediateRender' => FALSE,
+    'wrapHorizontal' => FALSE,
+    'wrapVertical' => FALSE,
+    'wrapOverlays' => FALSE,
+    'panHorizontal' => TRUE,
+    'panVertical' => TRUE,
+    'minZoomImageRatio' => '0.8',
+    'maxZoomPixelRatio' => '2',
+    'visibilityRatio' => '0.5',
+    'springStiffness' => '5.0',
+    'imageLoaderLimit' => '5',
+    'clickTimeThreshold' => '300',
+    'clickDistThreshold' => '5',
+    'zoomPerClick' => '2.0',
+    'zoomPerScroll' => '1.2',
+    'zoomPerSecond' => '2.0',
+    'showNavigator' => TRUE,
   );
 }
 
