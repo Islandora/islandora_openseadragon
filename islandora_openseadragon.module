@@ -87,7 +87,6 @@ function islandora_openseadragon_callback($params = NULL, $fedora_object = NULL)
 function islandora_openseadragon_preprocess_islandora_openseadragon_viewer(&$variables) {
   // Variable fedora_object included in results, but not used.
   $library_path = libraries_get_path('openseadragon');
-  $module_path = drupal_get_path('module', 'islandora_openseadragon');
   $variables['viewer_id'] = 'islandora-openseadragon';
   $settings = array(
     'id' => $variables['viewer_id'],
@@ -160,7 +159,13 @@ function islandora_openseadragon_preprocess_islandora_openseadragon_viewer(&$var
     }
     $settings['overlays'] = $highlights;
   }
+  $variables['openseadragon_settings'] = $settings;
+}
 
+function islandora_openseadragon_process_islandora_openseadragon_viewer(&$variables) {
+  $library_path = libraries_get_path('openseadragon');
+  $module_path = drupal_get_path('module', 'islandora_openseadragon');
+  $settings = $variables['openseadragon_settings'];
   drupal_add_js(array(
       'islandoraOpenSeadragon' => array(
         'pid' => isset($variables['fedora_object']) ? $variables['fedora_object']->id : NULL,
