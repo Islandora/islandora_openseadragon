@@ -162,6 +162,9 @@ function islandora_openseadragon_preprocess_islandora_openseadragon_viewer(&$var
   $variables['openseadragon_settings'] = $settings;
 }
 
+/**
+ * Implements hook_process().
+ */
 function islandora_openseadragon_process_islandora_openseadragon_viewer(&$variables) {
   $library_path = libraries_get_path('openseadragon');
   $module_path = drupal_get_path('module', 'islandora_openseadragon');
