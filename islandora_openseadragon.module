@@ -209,6 +209,7 @@ function islandora_openseadragon_get_settings() {
     'zoomPerSecond' => '2.0',
     'showNavigator' => TRUE,
     'defaultZoomLevel' => '1.0',
+    'showRotationControl' => TRUE,
   );
 }
 
@@ -231,7 +232,8 @@ function islandora_openseadragon_preprocess_islandora_object_print(array &$varia
       '#weight' => 0,
       '#prefix' => "<div id='clip'>",
       '#markup' => theme_image(array(
-                   'path' => $_GET['clip'], 'attributes' => $dimensions)),
+        'path' => $_GET['clip'],
+        'attributes' => $dimensions)),
       '#suffix' => '</div>',
     );
   }

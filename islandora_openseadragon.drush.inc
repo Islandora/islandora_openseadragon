@@ -2,18 +2,18 @@
 
 /**
  * @file
- * drush integration for islandora_openseadragon.
+ * Drush integration for islandora_openseadragon.
  */
 
 /**
  * The Openseadragon plugin URI.
  */
-define('OPENSEADRAGON_DOWNLOAD_URI', 'http://openseadragon.github.io/releases/openseadragon-bin-0.9.129.zip');
+define('OPENSEADRAGON_DOWNLOAD_URI', 'https://github.com/openseadragon/openseadragon/releases/download/v2.0.0/openseadragon-bin-2.0.0.zip');
 
 /**
- * The original OpenSeadragon directory
+ * The original OpenSeadragon directory.
  */
-define('OPENSEADRAGON_ORIGINAL_DIR', 'openseadragon-bin-0.9.129');
+define('OPENSEADRAGON_ORIGINAL_DIR', 'openseadragon-bin-2.0.0');
 
 
 /**
