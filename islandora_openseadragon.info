@@ -3,6 +3,6 @@ description = "OpenSeadragon viewer with option to serve images using djatoka"
 dependencies[] = libraries
 dependencies[] = islandora
 package = Islandora Viewers
-version = 7.x-dev
+version = 7.x-1.8
 core = 7.x
 php = 5.3
