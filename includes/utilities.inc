@@ -328,7 +328,7 @@ function islandora_openseadragon_identifier_tile_source($identifier) {
  *   The metadata required by the users chosen implementation.
  */
 function islandora_openseadragon_datastream_tile_source(AbstractDatastream $datastream) {
-  $message = islandora_deprecated('7.x-1.10', t('Please use gearman-init instead.'));
+  $message = islandora_deprecated('7.x-1.10', t('Please use islandora_openseadragon_identifier_tile_source instead.'));
   trigger_error(filter_xss($message), E_USER_DEPRECATED);
 
   $identifier = islandora_openseadragon_identifier_url($datastream);
