@@ -328,6 +328,9 @@ function islandora_openseadragon_identifier_tile_source($identifier) {
  *   The metadata required by the users chosen implementation.
  */
 function islandora_openseadragon_datastream_tile_source(AbstractDatastream $datastream) {
+  $message = islandora_deprecated('7.x-1.10', t('Please use gearman-init instead.'));
+  trigger_error(filter_xss($message), E_USER_DEPRECATED);
+
   $identifier = islandora_openseadragon_identifier_url($datastream);
   return islandora_openseadragon_identifier_tile_source($identifier);
 }
@@ -370,7 +373,6 @@ function islandora_openseadragon_iiif_tile_source($identifier) {
  *   - maxLevel: The maximum level to attempt to load.
  */
 function islandora_openseadragon_djatoka_tile_source($identifier) {
-  module_load_include('inc', 'islandora', 'includes/authtokens');
   return array(
     'identifier' => $identifier,
     'width' => NULL,
@@ -392,6 +394,9 @@ function islandora_openseadragon_djatoka_tile_source($identifier) {
  *   The URL at which an image server can access the given image datastream.
  */
 function islandora_openseadragon_identifier_url(AbstractDatastream $datastream) {
+  $message = islandora_deprecated('7.x-1.10', t('Please use URL passed to viewer.'));
+  trigger_error(filter_xss($message), E_USER_DEPRECATED);
+
   module_load_include('inc', 'islandora', 'includes/authtokens');
   $pid = $datastream->parent->id;
   $dsid = $datastream->id;
