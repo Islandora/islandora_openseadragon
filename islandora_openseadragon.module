@@ -227,7 +227,10 @@ function islandora_openseadragon_tokens($type, $tokens, array $data = array(), a
       $options = array(
         'absolute' => TRUE,
         'language' => language_default(),
-        'https' => drupal_is_https(),
+        'https' => (function_exists('drupal_is_https') ?
+          drupal_is_https() :
+          (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')
+        ),
       );
 
       if ($name == 'url_token') {
