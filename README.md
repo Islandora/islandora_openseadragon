@@ -1,10 +1,10 @@
 # Islandora OpenSeadragon [![Build Status](https://travis-ci.org/Islandora/islandora_openseadragon.png?branch=7.x)](https://travis-ci.org/Islandora/islandora_openseadragon)
 
-# Introduction
+## Introduction
 
-An Islandora viewer module using OpenSeadragon. Works with large image datastreams (JPEG-2000). Supports a custom Djatoka tilesource and a IIIF tilesource.
+This is an Islandora viewer module using OpenSeadragon. It allows users to view large image datastreams (like JPEG-2000) through image tile servers. This module supports a custom Djatoka tilesource and a IIIF tilesource.
 
-Based in spirit from the JS component of Kevin Clarke's [FreeLib-Djatoka](https://github.com/ksclarke/freelib-djatoka)
+Based in spirit on the JS component of Kevin Clarke's [FreeLib-Djatoka](https://github.com/ksclarke/freelib-djatoka).
 
 ## Requirements
 
@@ -15,55 +15,78 @@ This module requires the following modules/libraries:
 * [OpenSeadragon](https://github.com/openseadragon/openseadragon/)
 * [Drupal Token Module](https://www.drupal.org/project/token)
 
+In addition, either Djatoka or a IIIF image server needs to be setup.
+
 ## Installation
 
-Install as usual, see [this](https://drupal.org/documentation/install/modules-themes/modules-7) for further information.
+Install the module as usual, see [Drupal 7's documentation on installing modules](https://drupal.org/documentation/install/modules-themes/modules-7) for further information.
 
-[Download](https://github.com/openseadragon/openseadragon/releases/download/v2.3.1/openseadragon-bin-2.3.1.zip) and install the Openseadragon library to your sites/libraries folder, or run `drush openseadragon-plugin`. Openseadragon 2.3.1 is known to work well with Islandora.
+The OpenSeadragon JavaScript library is not included in this module. Openseadragon 2.3.1 is known to work well with Islandora.
+You can use Drush to download and install it automatically or do it manually.
 
-Note: If you use the Drush command, it is advisable to Move (not copy) the install script to your `.drush` folder and run it.
+Older versions must be updated. You can do this quickly 
+with the provided Drush command.
+
+### Drush OpenSeadragon installation
+
+This module provides a Drush command to download and install a recent version of OpenSeadragon. It is advisable to *move* (not copy) the install script to your `.drush` folder and run the following command from that folder:
+
+`drush openseadragon-plugin`
+
+### Manual OpenSeadragon installation
+
+Download the [OpenSeadragon 2.3.1 binary release](https://github.com/openseadragon/openseadragon/releases/download/v2.3.1/openseadragon-bin-2.3.1.zip) and install the Openseadragon library to your sites/libraries folder.
 
 ## Configuration
 
+Islandora OpenSeadragon offers many settings to be configured. All settings are found in Administration » Islandora » Islandora Viewers » OpenSeadragon (admin/islandora/islandora_viewers/openseadragon).
+
+In this README, only the image server settings are highlighted.
+Other settings are explained on the [Open Seadragon wiki page](https://wiki.duraspace.org/display/ISLANDORA/Open+Seadragon).
+
 ### Djatoka Image Server
 
-#### Drupal 
+When you use the Adore-Djatoka Image Server ("Djatoka"), you need to set the base URL to the Adore-Djatoka server OpenURL resolver.
+The base URL depends on the setup of Djatoka, including (optional) configuration of a reverse proxy.
 
-Set the paths for 'Djatoka server base URL' and configure OpenSeadragon in Administration » Islandora » Islandora Viewers » OpenSeadragon (admin/islandora/islandora_viewers/openseadragon).
+By default, Islandora OpenSeadragon expects that the Djatoka OpenURL resolver is reachable on the same domain name and port as Islandora itself, at the path `adore-djatoka/resolver`.
+A checkmark and confirmation message appear when Islandora can connect to the server.
+If Islandora cannot connect to the server, a cross and error message appear.
 
 ![Configuration](https://user-images.githubusercontent.com/25011926/40389344-2a7854ea-5de0-11e8-8db9-7a1bf25f2561.png)
 
-If you have an *existing* install it's required to update Openseadragon to it's latest version. You can do this quickly 
-with the provided Drush command.
+### IIIF Image server
 
-```bash
-drush openseadragon-plugin
-```
+When you use the IIIF Image Server, you need to specify:
 
-#### Apache Reverse Proxy
+* the base URL of the image server;
+* whether to send the image access token as a HTTP header instead of a query parameter;
+* the pattern to use as the image identifier.
 
-Reverse proxy config: We make the assumption that we (reverse) proxy Djatoka, to fix the same-origin issue.
+As with Djatoka, the base URL depends on the setup of your IIIF image server and reverse proxy, if you use one.
+Any [IIIF](https://iiif.io) image server can be used as the IIIF tile source. This IIIF server does need to be configured to resolve the image identifier to retrieve the image.
 
-For Apache, with Drupal running on the same box as Apache, a couple lines like:
+By default, Islandora OpenSeadragon uses the full URL to the image's JP2 datastream and the image access token as image identifier.
+If you use the [Cantaloupe 🍈](https://cantaloupe-project.github.io/) IIIF image server,
+you can configure it to resolve these identifiers using the [`HttpResolver`](https://cantaloupe-project.github.io/manual/3.4/resolvers.html#HttpResolver) with no prefix specified.
 
-```
-ProxyPass /adore-djatoka http://localhost:8080/adore-djatoka
-ProxyPassReverse /adore-djatoka http://localhost:8080/adore-djatoka
-```
+### Reverse Proxy
 
-in the Apache config somewhere (either the main apache.conf, httpd.conf, or in and arbitrarily named `*.conf` in your Apache's conf.d directory should suffice to establish the reverse proxy.
+A reverse proxy can be used to make an image server available on the same domain as Drupal,
+so that cross-origin resource access and the need for CORS headers are avoided.
+Various applications can be used as a reverse proxy; [Apache HTTPD] and [nginx] are common in reverse proxy setups.
+For details on configuring your reverse proxy, you should consult the documentation for your application of choice.
 
-In Debian derived systems one will need to create location entries for each proxy or remove the Deny from All in mod_proxy's conf file.
+[Apache HTTPD]: https://httpd.apache.org
+[nginx]: https://nginx.org/
 
-### IIIF
-
-Any [IIIF](http://iiif.io) image server can be used the the IIIF tile source. The IIIF tile source provides a full URL to the datastream to be displayed as the IIIF `identifier`. The IIIF server needs to be configured to resolve this full URL to retrieve the image. 
-
-The [Cantaloupe 🍈](https://medusa-project.github.io/cantaloupe/) IIIF image server can be configured to resolve these identifiers using the [`HttpResolver`](https://medusa-project.github.io/cantaloupe/manual/3.3/resolvers.html#HttpResolver) with no prefix specified.
+Note: if you use a reverse proxy, you may need to configure the image server as well, so that it knows
+what external URLs are used to reach the image server. Whether this is necessary and how the image server
+needs to be configured, depends on the image server.
 
 ## Documentation
 
-Further documentation for this module is available at [our wiki](https://wiki.duraspace.org/display/ISLANDORA/Open+Seadragon)
+Further documentation for this module is available at [our wiki](https://wiki.duraspace.org/display/ISLANDORA/Open+Seadragon).
 
 ## Troubleshooting/Issues
 
