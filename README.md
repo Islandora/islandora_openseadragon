@@ -25,41 +25,9 @@ Note: If you use the Drush command, it is advisable to Move (not copy) the insta
 
 ## Configuration
 
-### Djatoka Image Server
+Configure the OpenSeadragon viewer settings.
 
-#### Drupal 
-
-Set the paths for 'Djatoka server base URL' and configure OpenSeadragon in Administration » Islandora » Islandora Viewers » OpenSeadragon (admin/islandora/islandora_viewers/openseadragon).
-
-![Configuration](https://user-images.githubusercontent.com/25011926/40389344-2a7854ea-5de0-11e8-8db9-7a1bf25f2561.png)
-
-If you have an *existing* install it's required to update Openseadragon to it's latest version. You can do this quickly 
-with the provided Drush command.
-
-```bash
-drush openseadragon-plugin
-```
-
-#### Apache Reverse Proxy
-
-Reverse proxy config: We make the assumption that we (reverse) proxy Djatoka, to fix the same-origin issue.
-
-For Apache, with Drupal running on the same box as Apache, a couple lines like:
-
-```
-ProxyPass /adore-djatoka http://localhost:8080/adore-djatoka
-ProxyPassReverse /adore-djatoka http://localhost:8080/adore-djatoka
-```
-
-in the Apache config somewhere (either the main apache.conf, httpd.conf, or in and arbitrarily named `*.conf` in your Apache's conf.d directory should suffice to establish the reverse proxy.
-
-In Debian derived systems one will need to create location entries for each proxy or remove the Deny from All in mod_proxy's conf file.
-
-### IIIF
-
-Any [IIIF](http://iiif.io) image server can be used the the IIIF tile source. The IIIF tile source provides a full URL to the datastream to be displayed as the IIIF `identifier`. The IIIF server needs to be configured to resolve this full URL to retrieve the image. 
-
-The [Cantaloupe 🍈](https://medusa-project.github.io/cantaloupe/) IIIF image server can be configured to resolve these identifiers using the [`HttpResolver`](https://medusa-project.github.io/cantaloupe/manual/3.3/resolvers.html#HttpResolver) with no prefix specified.
+![Configuration](https://user-images.githubusercontent.com/2857697/63660578-9e774700-c77c-11e9-864b-8c720b505f24.png)
 
 ## Documentation
 

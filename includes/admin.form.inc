@@ -18,93 +18,18 @@
  */
 function islandora_openseadragon_admin(array $form, array &$form_state) {
   module_load_include('inc', 'islandora', 'includes/utilities');
+  form_load_include($form_state, 'inc', 'islandora', 'includes/imageserver');
   module_load_include('inc', 'islandora_openseadragon', 'includes/utilities');
   $settings = islandora_openseadragon_get_settings(FALSE);
   $version = islandora_openseadragon_get_installed_version();
-  $djatoka_url = islandora_system_settings_form_default_value('islandora_openseadragon_djatoka_url', 'adore-djatoka/resolver', $form_state);
-  $iiif_url = islandora_system_settings_form_default_value('islandora_openseadragon_iiif_url', 'iiif', $form_state);
+
   $form = array(
-    'islandora_openseadragon_tilesource' => array(
-      '#type' => 'select',
-      '#title' => t('Image Server'),
-      '#description' => t('Select the image server to use with OpenSeadragon'),
-      '#default_value' => variable_get('islandora_openseadragon_tilesource', 'djatoka'),
-      '#options' => array(
-        'djatoka' => t('Adore-Djatoka Image Server'),
-        'iiif' => t('IIIF Image Server'),
-      ),
-    ),
+    'islandora_openseadragon_tilesource' => islandora_imageserver_get_type_selectbox(),
     'islandora_openseadragon_fit_to_aspect_ratio' => array(
       '#type' => 'checkbox',
       '#title' => t('Constrain image to viewport'),
       '#default_value' => islandora_system_settings_form_default_value('islandora_openseadragon_fit_to_aspect_ratio', FALSE, $form_state),
       '#description' => t('On the initial page load, the entire image will be visible in the viewport.'),
-    ),
-    'djatoka' => array(
-      '#type' => 'fieldset',
-      '#title' => t('Adore Djatoka Image Server Settings'),
-      '#description' => t('<p>Settings for Adore-Djatoka Image Server</p>'),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="islandora_openseadragon_tilesource"]' => array('value' => 'djatoka'),
-        ),
-      ),
-      'islandora_openseadragon_djatoka_url' => array(
-        '#prefix' => '<div id="islandora-openseadragon-djatoka-path-wrapper">',
-        '#suffix' => '</div>',
-        '#type' => 'textfield',
-        '#title' => t('Adore-Djatoka Image Server Base URL'),
-        '#title_display' => 'invisible',
-        '#default_value' => $djatoka_url,
-        '#description' => t('The location of the Adore-Djatoka server OpenURL resolver. <br/> !confirmation_message', array(
-          '!confirmation_message' => islandora_openseadragon_admin_form_djatoka_access_message($djatoka_url),
-        )),
-        '#ajax' => array(
-          'callback' => 'islandora_openseadragon_admin_ajax_djatoka_url',
-          'wrapper' => 'islandora-openseadragon-djatoka-path-wrapper',
-        ),
-      ),
-    ),
-    'iiif' => array(
-      '#type' => 'fieldset',
-      '#title' => t('IIIF Image Server Settings'),
-      '#description' => t('Settings for IIIF Image Server'),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="islandora_openseadragon_tilesource"]' => array('value' => 'iiif'),
-        ),
-      ),
-      'islandora_openseadragon_iiif_url' => array(
-        '#prefix' => '<div id="islandora-openseadragon-iiif-path-wrapper">',
-        '#suffix' => '</div>',
-        '#type' => 'textfield',
-        '#title' => t('IIIF Image Server Base URL'),
-        '#default_value' => $iiif_url,
-        '#description' => t('The location of the IIIF Image Server.'),
-      ),
-      'islandora_openseadragon_iiif_token_header' => array(
-        '#type' => 'checkbox',
-        '#title' => t('Add token as header'),
-        '#default_value' => variable_get('islandora_openseadragon_iiif_token_header', FALSE),
-        '#description' => t('Instead of sending the token as a query parameter, it will be sent in the X-ISLANDORA-TOKEN header.'),
-      ),
-      'islandora_openseadragon_iiif_identifier' => array(
-        '#type' => 'textfield',
-        '#title' => t('IIIF Identifier'),
-        '#default_value' => variable_get('islandora_openseadragon_iiif_identifier', '[islandora_openseadragon:url_token]'),
-        '#element_validate' => array('token_element_validate'),
-        '#token_types' => array('islandora_openseadragon'),
-      ),
-      'islandora_openseadragon_iiif_token_tree' => array(
-        '#type' => 'fieldset',
-        '#title' => t('Replacement patterns'),
-        '#collapsible' => TRUE,
-        '#collapsed' => TRUE,
-        '#description' => theme('token_tree', array(
-          'token_types' => array('islandora_openseadragon'),
-          'global_types' => FALSE,
-         )),
-      ),
     ),
     'tilesource' => array(
       '#type' => 'fieldset',
@@ -1074,105 +999,6 @@ function islandora_openseadragon_admin(array $form, array &$form_state) {
     '#submit' => array('islandora_openseadragon_admin_submit_normalize'),
   );
   return system_settings_form($form);
-}
-
-/**
- * Get the element to render for the AJAX event that triggered this callback.
- *
- * @param array $form
- *   The Drupal form definition.
- * @param array $form_state
- *   The Drupal form state.
- *
- * @return array
- *   The form element to render.
- */
-function islandora_openseadragon_admin_ajax_djatoka_url(array $form, array $form_state) {
-  return $form['djatoka']['islandora_openseadragon_djatoka_url'];
-}
-
-/**
- * Gets a message which describes if Adore-Djatoka is accessible.
- *
- * @param string $path
- *   The path to the Adore Djatoka image resolver.
- *
- * @return string
- *   A message describing the accessibility of the Adore-Djatoka image resolver.
- */
-function islandora_openseadragon_admin_form_djatoka_access_message($path) {
-  $url = url("{$path}", array(
-    'absolute' => TRUE,
-    'query' => array(
-      'url_ver' => 'Z39.88-2004',
-      'rft_id' => 'http://memory.loc.gov/gmd/gmd433/g4330/g4330/np000066.jp2',
-      'svc_id' => 'info:lanl-repo/svc/getRegion',
-      'svc_val_fmt' => 'info:ofi/fmt:kev:mtx:jpeg2000',
-      'svc.format' => 'image/jpeg',
-      'svc.level' => '1',
-    ),
-  ));
-  $result = drupal_http_request($url);
-  if ($result->code == 200) {
-    $confirmation_message = theme_image(array('path' => 'misc/watchdog-ok.png', 'attributes' => array()));
-    $confirmation_message .= t('Successfully connected to Adore Djatoka Server.');
-  }
-  else {
-    $confirmation_message = theme_image(array('path' => 'misc/watchdog-error.png', 'attributes' => array()));
-    $confirmation_message .= t('Unable to connect to Adore Djatoka Server at !path', array(
-      '!path' => $path,
-    ));
-  }
-  return $confirmation_message;
-}
-
-/**
- * Validates that the supplied djatoka base URL is a working djatoka install.
- *
- * @param array $element
- *   The element to validate.
- * @param array $form_state
- *   Drupal form state.
- * @param array $form
- *   Drupal form.
- */
-function islandora_openseadragon_djatoka_url_validate(array $element, array &$form_state, array $form) {
-  $path = $element['#value'];
-  if (empty($path)) {
-    form_error($element, t('This field is required.'));
-  }
-  else {
-    $url = url("{$path}", array(
-      'absolute' => TRUE,
-      'query' => array(
-        'url_ver' => 'Z39.88-2004',
-        'rft_id' => 'http://memory.loc.gov/gmd/gmd433/g4330/g4330/np000066.jp2',
-        'svc_id' => 'info:lanl-repo/svc/getRegion',
-        'svc_val_fmt' => 'info:ofi/fmt:kev:mtx:jpeg2000',
-        'svc.format' => 'image/jpeg',
-        'svc.level' => '1',
-      ),
-    ));
-    $result = drupal_http_request($url);
-    if ($result->code != 200) {
-      form_error($element, t('This does not seem to be a functioning Djatoka server.'));
-    }
-  }
-}
-
-/**
- * Validate the form.
- *
- * @param array $form
- *   Drupal form.
- * @param array $form_state
- *   Drupal form state.
- */
-function islandora_openseadragon_admin_validate(array $form, array &$form_state) {
-  if ($form_state['values']['islandora_openseadragon_tilesource'] == 'djatoka') {
-    $element = $form['djatoka']['islandora_openseadragon_djatoka_url'];
-    islandora_openseadragon_djatoka_url_validate($element, $form_state, $form);
-  }
 }
 
 /**

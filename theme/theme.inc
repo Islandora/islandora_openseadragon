@@ -13,26 +13,17 @@
  */
 function template_preprocess_islandora_openseadragon_viewer(array &$variables) {
   module_load_include('inc', 'islandora_openseadragon', 'includes/utilities');
+  module_load_include('inc', 'islandora', 'includes/imageserver');
+  $settings = islandora_imageserver_get_settings();
   $library_path = libraries_get_path('openseadragon');
-  if (isset($variables['fedora_object']) && $variables['fedora_object'] !== NULL) {
-    $message = t("The parameter 'fedora_object' in theme('islandora_openseadragon_viewer') has been deprecated. As of 7.x-1.10, please update your code before the next release.");
-    trigger_error(check_plain($message), E_USER_DEPRECATED);
-    // Attempt to convert 'fedora_object', to 'pid'.
-    $variables['pid'] = $variables['fedora_object']->id;
-  }
-  if (isset($variables['uri']) && $variables['uri'] !== '') {
-    $message = t("The parameter 'uri' in theme('islandora_openseadragon_viewer') has been deprecated. As of 7.x-1.10, please update your code before the next release.");
-    trigger_error(check_plain($message), E_USER_DEPRECATED);
-    $variables['tile_sources'] = array(islandora_openseadragon_identifier_tile_source($variables['uri']));
-  }
   $variables['id'] = $variables['viewer_id'] = 'islandora-openseadragon';
   $variables['settings'] = array(
     'pid' => $variables['pid'],
-    'imageServer' => variable_get('islandora_openseadragon_tilesource', 'djatoka'),
-    'djatokaServerBaseURL' => url(variable_get('islandora_openseadragon_djatoka_url', 'adore-djatoka/resolver'),
+    'imageServer' => $settings['type'],
+    'djatokaServerBaseURL' => url($settings['url'],
       array('absolute' => TRUE)
     ),
-    'iiifServerBaseURL' => url(variable_get('islandora_openseadragon_iiif_url', 'iiif')),
+    'iiifServerBaseURL' => url($settings['url']),
     'fitToAspectRatio' => variable_get('islandora_openseadragon_fit_to_aspect_ratio', FALSE),
     'options' => array(
       'id' => $variables['id'],

@@ -98,32 +98,11 @@ function islandora_openseadragon_islandora_viewer_info() {
  */
 function islandora_openseadragon_callback(array $params = array(), AbstractObject $object = NULL) {
   module_load_include('inc', 'islandora_openseadragon', 'includes/utilities');
-
-  if (isset($params['jp2_url']) && !(isset($params['pid']) && isset($params['dsid']) && isset($params['token']))) {
-    $message = islandora_deprecated('7.x-1.11', t('The jp2_url parameter has been depreciated. Please update your code before the next release.'));
-    trigger_error(filter_xss($message), E_USER_DEPRECATED);
-
-    // Try to mangle the jp2_url into the data we need.
-    $matches = array();
-    preg_match('/object\/([^\/]*)\/datastream\/([^\/]*).*token=([^&]*)/', $params['jp2_url'], $matches);
-    $pid = isset($matches[1]) ? $matches[1] : NULL;
-    $dsid = isset($matches[2]) ? $matches[2] : NULL;
-    $token = isset($matches[3]) ? $matches[3] : NULL;
-
-    if (!isset($params['pid'])) {
-      $params['pid'] = urldecode($pid);
-    }
-    if (!isset($params['dsid'])) {
-      $params['dsid'] = urldecode($dsid);
-    }
-    if (!isset($params['token'])) {
-      $params['token'] = urldecode($token);
-    }
-  }
+  module_load_include('inc', 'islandora', 'includes/imageserver');
+  $settings = islandora_imageserver_get_settings();
 
   if (isset($params['pid']) && isset($params['dsid']) && isset($params['token'])) {
-    $token_header = variable_get('islandora_openseadragon_tilesource', 'djatoka') == 'iiif'
-      && variable_get('islandora_openseadragon_iiif_token_header', FALSE);
+    $token_header = ($settings['type'] == 'djatoka' && $settings['iiif_token_header']);
 
     return theme('islandora_openseadragon_viewer', array(
       'pid' => $params['pid'],
@@ -157,91 +136,4 @@ function islandora_openseadragon_preprocess_islandora_object_print(array &$varia
       drupal_set_message(t('Invalid clip parameters passed.'), 'error');
     }
   }
-}
-
-/**
- * Implements hook_token_info().
- */
-function islandora_openseadragon_token_info() {
-  $info = array();
-
-  $info['types']['islandora_openseadragon'] = array(
-    'name' => t('Islandora Openseadragon'),
-    'description' => t('Tokens for building IIIF identifer in Islandora Openseadragon.'),
-    'needs-data' => 'islandora_openseadragon',
-  );
-
-  $info['tokens']['islandora_openseadragon']['pid'] = array(
-    'name' => t('PID'),
-    'description' => t('The objects PID.'),
-  );
-
-  $info['tokens']['islandora_openseadragon']['dsid'] = array(
-    'name' => t('DSID'),
-    'description' => t('The objects DSID.'),
-  );
-
-  $info['tokens']['islandora_openseadragon']['url'] = array(
-    'name' => t('URL'),
-    'description' => t('The URL to the object in Islandora.'),
-  );
-
-  $info['tokens']['islandora_openseadragon']['url_token'] = array(
-    'name' => t('URL with Token'),
-    'description' => t('The URL to the object in Islandora with token in the query string.'),
-  );
-
-  $info['tokens']['islandora_openseadragon']['token'] = array(
-    'name' => t('Token'),
-    'description' => t('The token that can be used to access the object in Islandora.'),
-  );
-
-  return $info;
-}
-
-/**
- * Implements hook_tokens().
- */
-function islandora_openseadragon_tokens($type, $tokens, array $data = array(), array $options = array()) {
-  $replacements = array();
-
-  if ($type != 'islandora_openseadragon' || !isset($data['islandora_openseadragon'])) {
-    return $replacements;
-  }
-
-  $pid = $data['islandora_openseadragon']['pid'];
-  $dsid = $data['islandora_openseadragon']['dsid'];
-  $token = $data['islandora_openseadragon']['token'];
-
-  foreach ($tokens as $name => $original) {
-    if ($name == 'pid') {
-      $replacements[$original] = $pid;
-    }
-    elseif ($name == 'dsid') {
-      $replacements[$original] = $dsid;
-    }
-    elseif ($name == 'token') {
-      $replacements[$original] = $token;
-    }
-    elseif ($name == 'url' || $name == 'url_token') {
-      $options = array(
-        'absolute' => TRUE,
-        'language' => language_default(),
-        'https' => (function_exists('drupal_is_https') ?
-          drupal_is_https() :
-          (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')
-        ),
-      );
-
-      if ($name == 'url_token') {
-        $options['query'] = array(
-          'token' => $token,
-        );
-      }
-
-      $replacements[$original] = url("islandora/object/{$pid}/datastream/{$dsid}/view", $options);
-    }
-  }
-
-  return $replacements;
 }

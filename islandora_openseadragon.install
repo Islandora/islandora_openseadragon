@@ -51,13 +51,23 @@ function islandora_openseadragon_uninstall() {
     'islandora_openseadragon_tile_size',
     'islandora_openseadragon_tile_overlap',
     'islandora_openseadragon_fit_to_aspect_ratio',
-    'islandora_openseadragon_tilesource',
-    'islandora_openseadragon_djatoka_url',
-    'islandora_openseadragon_iiif_url',
-    'islandora_openseadragon_iiif_token_header',
-    'islandora_openseadragon_iiif_identifier',
   );
   array_walk($variables, 'variable_del');
+}
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function islandora_openseadragon_update_dependencies() {
+  $dependencies = array(
+    // We need to migrate settings before we can delete them.
+    'islandora_openseadragon' => array(
+      7101 => array(
+        'islandora' => 7003,
+      ),
+    ),
+  );
+  return $dependencies;
 }
 
 /**
@@ -94,4 +104,20 @@ function islandora_openseadragon_update_7100(array &$sandbox) {
 
   $t = get_t();
   return $t("Islandora Openseadragon updates complete");
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Removes image server configuration, this is moved to Islandora core.
+ */
+function islandora_openseadragon_update_7101() {
+  $vars = array(
+    'islandora_openseadragon_tilesource',
+    'islandora_openseadragon_djatoka_url',
+    'islandora_openseadragon_iiif_url',
+    'islandora_openseadragon_iiif_token_header',
+    'islandora_openseadragon_iiif_identifier',
+  );
+  array_walk($vars, 'variable_del');
 }
